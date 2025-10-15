@@ -15,23 +15,31 @@ columns_to_plot = ['AVG_MIN', 'MED_MIN']
 # 차트에 표시할 간결한 이름
 legend_labels = ['AVG_MIN', 'MED_MIN']
 
-# 한글 폰트 설정 (Mac 환경)
+# 한글 폰트 설정 (Mac 및 Windows 환경)
 import matplotlib.font_manager as fm
+import platform
 
-# Mac에서 사용 가능한 한글 폰트 설정
+# 운영체제에 따른 한글 폰트 설정
 available_fonts = [f.name for f in fm.fontManager.ttflist]
-korean_fonts = ['AppleGothic', 'AppleSDGothicNeo', 'NanumGothic', 'Arial Unicode MS']
+system = platform.system()
+
+if system == 'Windows':
+    korean_fonts = ['Malgun Gothic', 'NanumGothic', 'Gulim', 'Batang']
+elif system == 'Darwin':  # macOS
+    korean_fonts = ['AppleGothic', 'AppleSDGothicNeo', 'NanumGothic', 'Arial Unicode MS']
+else:  # Linux
+    korean_fonts = ['NanumGothic', 'NanumBarunGothic', 'UnDotum']
 
 font_set = False
 for font in korean_fonts:
     if font in available_fonts:
         plt.rcParams['font.family'] = font
         font_set = True
-        print(f"한글 폰트 '{font}' 설정 완료")
+        print(f"한글 폰트 '{font}' 설정 완료 ({system})")
         break
 
 if not font_set:
-    print("Warning: 한글 폰트를 찾을 수 없습니다. 기본 폰트를 사용합니다.")
+    print(f"Warning: {system}에서 한글 폰트를 찾을 수 없습니다. 기본 폰트를 사용합니다.")
     plt.rcParams['font.family'] = 'DejaVu Sans'
 
 plt.rcParams['axes.unicode_minus'] = False  # 마이너스 폰트 깨짐 방지
